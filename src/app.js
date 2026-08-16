@@ -4,6 +4,7 @@ const { generateChildhoodPhoto } = require("./replicateClient");
 const { parseChildhoodPhotoRequest, buildGenerationPrompt } = require("./promptParser");
 
 const triggerWord = process.env.LORA_TRIGGER_WORD || "TOK";
+const subjectGender = process.env.LORA_SUBJECT_GENDER || "child";
 
 const app = new App({
   token: process.env.SLACK_BOT_TOKEN,
@@ -15,7 +16,7 @@ const app = new App({
 
 async function handlePhotoRequest({ text, channel, threadTs, say }) {
   const parsed = parseChildhoodPhotoRequest(text);
-  const prompt = buildGenerationPrompt(parsed, triggerWord);
+  const prompt = buildGenerationPrompt(parsed, triggerWord, subjectGender);
 
   await say({
     text: `Got it — generating "${parsed.raw}" now, this usually takes 15-30s...`,

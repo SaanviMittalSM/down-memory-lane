@@ -12,7 +12,13 @@ const replicate = new Replicate({ auth: process.env.REPLICATE_API_TOKEN });
 
 const TRAINER_OWNER = "ostris";
 const TRAINER_MODEL = "flux-dev-lora-trainer";
-const TRAINER_VERSION = "d995297071a44dcb72244e6c19462111649ec86a9646c32df56daa7f14e5f61";
+
+// Replicate rotates trainer version ids over time, so resolve the current
+// one at runtime instead of hardcoding it.
+async function getLatestTrainerVersion() {
+  const model = await replicate.models.get(TRAINER_OWNER, TRAINER_MODEL);
+  return model.latest_version.id;
+}
 
 async function ensureDestinationModel(owner, name) {
   try {
@@ -45,13 +51,22 @@ async function main() {
   }
 
   await ensureDestinationModel(owner, name);
+  const trainerVersion = await getLatestTrainerVersion();
+
+  // trainings.create() JSON-encodes its input as-is (unlike predictions.run(),
+  // which auto-uploads file-like inputs) so the zip has to be uploaded to
+  // Replicate's file storage explicitly first, and its URL passed through.
+  console.log("Uploading training-images.zip to Replicate...");
+  const zipBuffer = fs.readFileSync(zipPath);
+  const uploadedFile = await replicate.files.create(zipBuffer);
+  const zipUrl = uploadedFile.urls.get;
 
   console.log(`Starting training: destination=${owner}/${name}, trigger_word=${triggerWord}`);
 
-  const training = await replicate.trainings.create(TRAINER_OWNER, TRAINER_MODEL, TRAINER_VERSION, {
+  const training = await replicate.trainings.create(TRAINER_OWNER, TRAINER_MODEL, trainerVersion, {
     destination: `${owner}/${name}`,
     input: {
-      input_images: fs.createReadStream(zipPath),
+      input_images: zipUrl,
       trigger_word: triggerWord,
       steps: 1000,
     },

@@ -7,6 +7,11 @@ npm-debug.log*
 training-images/*
 !training-images/.gitkeep
 training-images/*.zip
+/training-images.zip
+
+# local debug artifacts from manual API testing
+.model.json
+.upload.json
 
 # local run artifacts
 *.log

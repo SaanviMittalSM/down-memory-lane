@@ -20,12 +20,12 @@ function parseChildhoodPhotoRequest(rawText) {
   };
 }
 
-function buildGenerationPrompt({ age, setting, raw }, triggerWord) {
+function buildGenerationPrompt({ age, setting, raw }, triggerWord, subjectGender = "child") {
   if (age && setting) {
-    return `A candid, realistic photo of ${triggerWord} as a ${age}-year-old child, ${setting}, natural lighting, film photography, high detail`;
+    return `A candid, realistic photo of ${triggerWord} as a ${age}-year-old ${subjectGender}, ${setting}, natural lighting, film photography, high detail`;
   }
   // Parsing failed — pass the trigger word plus the raw request straight through
-  return `A candid, realistic photo of ${triggerWord}, ${raw}, natural lighting, film photography, high detail`;
+  return `A candid, realistic photo of ${triggerWord} (${subjectGender}), ${raw}, natural lighting, film photography, high detail`;
 }
 
 module.exports = { parseChildhoodPhotoRequest, buildGenerationPrompt };
