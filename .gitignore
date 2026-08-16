@@ -1,6 +1,6 @@
 node_modules/
 .env
-CLAUDE.md
+.notes.md
 npm-debug.log*
 
 # personal training photos should never be committed
