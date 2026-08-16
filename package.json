@@ -1,0 +1,23 @@
+{
+  "name": "down-memory-lane",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Slack bot that generates personalized childhood photos on request using a Flux LoRA model on Replicate.",
+  "main": "src/app.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "node --watch src/app.js",
+    "train": "node scripts/train-lora.js",
+    "zip-training-images": "node scripts/zip-training-images.js"
+  },
+  "dependencies": {
+    "@slack/bolt": "^3.21.4",
+    "archiver": "^7.0.1",
+    "dotenv": "^16.4.5",
+    "replicate": "^0.34.1"
+  },
+  "engines": {
+    "node": ">=18.17"
+  }
+}

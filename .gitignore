@@ -1,0 +1,13 @@
+node_modules/
+.env
+CLAUDE.md
+npm-debug.log*
+
+# personal training photos should never be committed
+training-images/*
+!training-images/.gitkeep
+training-images/*.zip
+
+# local run artifacts
+*.log
+.DS_Store
